@@ -6,7 +6,7 @@ use app\services\Db;
 
 abstract class Record implements ModelInterface
 {
-    /** @var Db|null  */
+    
     protected $db;
     protected $tableName;
 
@@ -71,9 +71,9 @@ abstract class Record implements ModelInterface
         $updateFields = implode(",", $updateFields);
 
 
-        $sql = "UPDATE {$tableName} ({$updateFields}) VALUES ({$placeholders})";
-        $this->db->execute($sql, $params);
-        $this->id = $this->db->getLastInsertId();
+        $sql = "UPDATE {$tableName} ({$updateFields}) WHERE id = :id";
+        $this->db->execute($sql, [':id' => $this->id]);
+        
     }
         
     }
@@ -101,6 +101,14 @@ abstract class Record implements ModelInterface
         $sql = "INSERT INTO {$tableName} ({$columns}) VALUES ({$placeholders})";
         $this->db->execute($sql, $params);
         $this->id = $this->db->getLastInsertId();
+    }
+
+    public function save() {
+        if(is_null($this->id)) {
+            $this->insert();
+        }else {
+            $this->update();
+        }
     }
 
     protected static function getQuery($sql, $params = []) {

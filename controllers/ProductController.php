@@ -11,6 +11,7 @@ class ProductController extends Controller
     public function actionIndex()
     {
         echo "catalog";
+        
     }
     
     public function actionCard()
