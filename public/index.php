@@ -11,6 +11,6 @@ $actionName = $_GET['a'];
 $controllerClass = "app\controllers\\" . ucfirst($controllerName) . "Controller";
 
 if(class_exists($controllerClass)) {
-    $controller = new $controllerClass;
+    $controller = new $controllerClass(new \app\services\renderers\TemplateRenderer());
     $controller->runAction($actionName);
 }
