@@ -10,9 +10,9 @@ class TwigRenderer implements RenderInterface
 {
     public function render($template, $params = [])
     {
-        $loader = new Twig_Loader_Filesystem(VIEWS_DIR);
-        $twig = new Twig_Environment($loader);
-        $template = $twig->loadTemplate($template . ".php");
-        echo $template->render($params);
+        $loader = new Twig\Loader\FilesystemLoader(VIEWS_DIR . "twig");
+        $twig = new Twig\Environment($loader, []);
+        $template .= ".twig";
+        return $twig->render($template, $params);
     }
 }
