@@ -5,12 +5,22 @@ include ROOT_DIR . "services/Autoloader.php";
 
 spl_autoload_register([new \app\services\Autoloader(), 'loadClass']);
 
-$controllerName = $_GET['c'] ?: 'product';
-$actionName = $_GET['a'];
+$request = new \app\base\Request();
+
+$controllerName = $request->getControllerName() ?: 'product';
+$actionName = $request->getActionName();
 
 $controllerClass = "app\controllers\\" . ucfirst($controllerName) . "Controller";
 
 if(class_exists($controllerClass)) {
-    $controller = new $controllerClass(new \app\services\renderers\TemplateRenderer());
-    $controller->runAction($actionName);
+    $renderer = new \app\services\renderers\TemplateRenderer();
+    /** @var \app\controllers\Controller $controller */
+    $controller = new $controllerClass($renderer);
+   // try {
+        $controller->runAction($actionName);
+  /*  } catch (\app\exceptions\NotFoundException $e) {
+        (new \app\controllers\ErrorController($renderer))->runAction('notFound');
+    } catch (Exception $e) {
+       // header("Location: /");
+    }*/
 }
