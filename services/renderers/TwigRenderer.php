@@ -8,11 +8,16 @@ use app\interfaces\RenderInterface;
 
 class TwigRenderer implements RenderInterface
 {
+    protected $renderer;
+
+    public function __construct()
+    {
+        $loader = new \Twig\Loader\FilesystemLoader(VIEWS_DIR . 'twig');
+        $this->renderer = new \Twig\Environment($loader, []);
+    }
+
     public function render($template, $params = [])
     {
-        $loader = new Twig\Loader\FilesystemLoader(VIEWS_DIR . "twig");
-        $twig = new Twig\Environment($loader, []);
         $template .= ".twig";
-        return $twig->render($template, $params);
-    }
-}
+        return $this->renderer->render($template, $params);
+    }}

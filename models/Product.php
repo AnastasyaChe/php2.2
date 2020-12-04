@@ -10,12 +10,8 @@ class Product extends Record
     public $price;
     public $category_id;
 
-    public function getByCategoryId(int $categoryId)
+    public function getShortDescription()
     {
-    }
-
-    public static function getTableName(): string
-    {
-        return "gallery";
+        
     }
 }

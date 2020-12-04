@@ -9,8 +9,4 @@ class Orders extends Record
     public $count;
       
 
-    public static function getTableName(): string
-    {
-        return "orders";
-    }
 }

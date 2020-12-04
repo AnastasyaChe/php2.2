@@ -1,5 +1,10 @@
 <?php
+
+
 namespace app\controllers;
+
+
+use app\exceptions\NotFoundException;
 use app\interfaces\RenderInterface;
 
 abstract class Controller
@@ -9,6 +14,7 @@ abstract class Controller
     protected $useLayout = true;
     protected $layout = 'main';
     protected $renderer;
+
     
     public function __construct(RenderInterface $renderer)
     {
@@ -23,10 +29,11 @@ abstract class Controller
         if(method_exists($this, $method)) {
             $this->$method();
         } else {
-            echo "404";
+            throw new NotFoundException("Метод не найден");
         }
     }
-    protected function render($template, $params = []){
+
+    protected function render($template, $params = []) {
         $content = $this->renderer->render($template, $params);
         if($this->useLayout) {
             return $this->renderer->render(
@@ -36,5 +43,4 @@ abstract class Controller
         }
         return $content;
     }
-
 }
