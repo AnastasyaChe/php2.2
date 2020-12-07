@@ -4,49 +4,27 @@
 namespace app\controllers;
 
 
-use app\models\Product;
+use app\base\Request;
+use app\base\Session;
+use app\models\Basket;
+use app\models\repositories\ProductRepository;
 
 class BasketController extends Controller
 {
-    
-
     public function actionIndex()
     {
-        $basket = [];
-        if (!empty($_SESSION['basket'])) {
-            $productIds = array_filter(
-                array_keys($_SESSION['basket']),
-                function ($element) {
-                    return is_int($element);
-                }
-            );
-            $products = Product::getAllProducts($productIds);
-            foreach ($products as $product) {
-                $basket[] = [
-                    'product' => $product,
-                    'qty' => $_SESSION['basket'][$product['id']]
-                ];
-            }
-        }
+        $basket = (new Basket())->getItems();
         echo $this->render('basket', ['basket' => $basket]);
     }
-    public function actionAdd() {
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $productId = $_POST['id'];
-            $productQty = $_POST ['qty'];
-            
-            if(isset($_SESSION['basket'][$productId])) {
-                $_SESSION['basket'][$productId] +=$productQty;
-            
-        
-            }else {
-                $_SESSION['basket'][$productId] = $productQty;
-            
-            }  
-        }
-    }
-    
-    
 
-    
+    public function actionAdd()
+    {
+        $request = new Request();
+        if($request->isPost()) {
+            $productId = $request->post('product_id');
+            $productQty = $request->post('qty');
+            (new Basket())->add($productId, $productQty);
+        }
+        echo json_encode(['status' => 'success', 'message' => 'товар успешно добавлен в корзину']);
+    }
 }

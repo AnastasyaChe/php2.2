@@ -9,7 +9,7 @@ use app\models\User;
 
 class LkController extends Controller
 {
-    public function actionLk()
+    public function actionIndex()
     {
         echo "lk";
     }
