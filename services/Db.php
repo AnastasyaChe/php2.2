@@ -6,17 +6,21 @@ use app\traits\SingletonTrait;
 
 class Db
 {
-    use SingletonTrait;
+    public $config;
 
-    public $config = [
-        'driver' => 'mysql',
-        'host' => 'localhost',
-        'login' => 'root',
-        'password' => 'root',
-        'database' => 'php20202',
-        'charset' => 'utf8'
-    ];
+    public function __construct($driver, $host, $login, $password, $database, $charset)
+    {
+        $this->config = [
+            'driver' => $driver,
+            'host' => $host,
+            'login' => $login,
+            'password' => $password,
+            'database' => $database,
+            'charset' => $charset
+        ];
+    }
 
+    
     private $connection = null;
 
     protected function getConnection()
@@ -39,6 +43,7 @@ class Db
     }
 
 
+   
     private function query(string $sql, array $params = [])
     {
         $pdoStatement = $this->getConnection()->prepare($sql);
@@ -67,10 +72,12 @@ class Db
     {
         return $this->query($sql, $params)->rowCount();
     }
+
     public function getLastInsertId()
     {
         return $this->getConnection()->lastInsertId();
     }
+
 
     private function buildDsnString()
     {
